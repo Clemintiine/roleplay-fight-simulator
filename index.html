@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fight Simulator</title>
+    <link rel="stylesheet" href="/static/style.css"> <!-- Optional: for styling -->
+</head>
+<body>
+    <h1>Roleplay Fight Simulator</h1>
+
+    <form action="/fight" method="POST">
+        <div id="group1">
+            <h2>Group 1</h2>
+            <label>Number of characters in Group 1:</label>
+            <input type="number" id="group1_count" name="group1_count" min="1" max="10" value="1" required>
+            <div id="group1_characters">
+                <!-- Character fields will be added here dynamically by JavaScript -->
+            </div>
+        </div>
+
+        <div id="group2">
+            <h2>Group 2</h2>
+            <label>Number of characters in Group 2:</label>
+            <input type="number" id="group2_count" name="group2_count" min="1" max="10" value="1" required>
+            <div id="group2_characters">
+                <!-- Character fields will be added here dynamically by JavaScript -->
+            </div>
+        </div>
+
+        <button type="submit">Simulate Fight</button>
+    </form>
+
+    {% if result %}
+    <h2>Fight Result</h2>
+    <p>{{ result }}</p>
+    {% endif %}
+
+    <script>
+        // Dynamically add character input fields based on group count
+        document.getElementById('group1_count').addEventListener('change', function() {
+            addCharacterFields('group1', this.value);
+        });
+
+        document.getElementById('group2_count').addEventListener('change', function() {
+            addCharacterFields('group2', this.value);
+        });
+
+        function addCharacterFields(group, count) {
+            const container = document.getElementById(`${group}_characters`);
+            container.innerHTML = '';
+            for (let i = 0; i < count; i++) {
+                container.innerHTML += `
+                    <div>
+                        <h3>Character ${i + 1}</h3>
+                        <label>Name:</label>
+                        <input type="text" name="${group}_name_${i}" required>
+                        <label>Fighting:</label>
+                        <input type="number" name="${group}_fighting_${i}" min="0" max="40" required>
+                        <label>Agility:</label>
+                        <input type="number" name="${group}_agility_${i}" min="0" max="40" required>
+                        <label>Stamina:</label>
+                        <input type="number" name="${group}_stamina_${i}" min="0" max="40" required>
+                        <label>Size:</label>
+                        <select name="${group}_size_${i}" required>
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                        <label>Age:</label>
+                        <select name="${group}_age_${i}" required>
+                            <option value="young">Young</option>
+                            <option value="adult">Adult</option>
+                            <option value="elder">Elder</option>
+                        </select>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize character fields on page load
+        addCharacterFields('group1', 1);
+        addCharacterFields('group2', 1);
+    </script>
+</body>
+</html>
